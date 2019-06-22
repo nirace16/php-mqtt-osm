@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS Template</title>
+<title>Nepal Fire Fighter</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -24,7 +24,11 @@ body, html {height: 100%}
   <div class="w3-display-middle">
     <h1 class="w3-jumbo w3-animate-top">Nepal Fire Fighter</h1>
     <hr class="w3-border-grey" style="margin:auto;width:40%">
-    <p class="w3-large w3-center">Get Map</p>
+    <form type="post" action='map.php'>
+      <input type='text' id='lats' name='lats' value='112255'>
+      <input type='text' id='lons' name='lons' value='12255'>
+      <input type='submit' value='Get Map'>
+    </form>
   </div>
 </div>
 
@@ -52,18 +56,18 @@ $client_id = "phpMQTT-subscriber";
 
 $topic = "parctise";
 
-$mqtt = new Bluerhinos\phpMQTT($broker, $port, $client_id);
-if ($mqtt->connect(true, NULL, $usrname, $pass)) {
-  $topics[$topic] = array(
-      "qos" => 0,
-      "function" => "procmsg"
-  );
-  $mqtt->subscribe($topics,0);
-  while($mqtt->proc()) {}
-  $mqtt->close();
-} else {
-  exit(1);
-}
+// $mqtt = new Bluerhinos\phpMQTT($broker, $port, $client_id);
+// if ($mqtt->connect(true, NULL, $usrname, $pass)) {
+//   $topics[$topic] = array(
+//       "qos" => 0,
+//       "function" => "procmsg"
+//   );
+//   $mqtt->subscribe($topics,0);
+//   while($mqtt->proc()) {}
+//   $mqtt->close();
+// } else {
+//   exit(1);
+// }
 // define('BROKER', 'm16.cloudmqtt.com');
 // define('PORT', 12273);
 // define('CLIENT_ID', "pubclient_" + getmypid());
@@ -127,4 +131,52 @@ function procmsg($topic, $msg){
 
 });
 console.log('s');
+</script>-->
+
+<script src="mqttws31.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+  // Create a client instance
+  client = new Paho.MQTT.Client("host", port,"client_id");
+  //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
+
+  // set callback handlers
+  client.onConnectionLost = onConnectionLost;
+  client.onMessageArrived = onMessageArrived;
+  var options = {
+    useSSL: true,
+    userName: "username",
+    password: "password",
+    onSuccess:onConnect,
+    onFailure:doFail
+  }
+
+  // connect the client
+  client.connect(options);
+
+  // called when the client connects
+  function onConnect() {
+    // Once a connection has been made, make a subscription and send a message.
+    console.log("onConnect");
+    client.subscribe("/cloudmqtt");
+    message = new Paho.MQTT.Message("Hello CloudMQTT");
+    message.destinationName = "/cloudmqtt";
+    client.send(message);
+  }
+
+  function doFail(e){
+    console.log(e);
+  }
+
+  // called when the client loses its connection
+  function onConnectionLost(responseObject) {
+    if (responseObject.errorCode !== 0) {
+      console.log("onConnectionLost:"+responseObject.errorMessage);
+    }
+  }
+
+  // called when a message arrives
+  function onMessageArrived(message) {
+    console.log("onMessageArrived:"+message.payloadString);
+  }
 </script>

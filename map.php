@@ -5,6 +5,11 @@
 <title>OpenLayers Simplest Example</title>
 </head>
 <body>
+  <div>
+    <?php var_dump($_POST['lats']);
+    die('here');
+    ?>
+  </div>
 <div id="Map" style="height:1000px"></div>
 <script src="OpenLayers.js"></script>
 <script>
@@ -27,4 +32,4 @@
     map.setCenter(position, zoom);
 </script>
 </body>
-</html> 
+</html>
