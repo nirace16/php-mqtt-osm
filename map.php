@@ -1,20 +1,44 @@
-
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>OpenLayers Simplest Example</title>
+<title>OpenLayers Fire Fighters</title>
 </head>
 <body>
   <div>
-    <?php var_dump($_POST['lats']);
-    die('here');
+    <?php
+    if(isset($_POST['lats'])){
+    $lats = $_POST['lats'];
+    }
+    if(isset($_POST['lons'])){
+    $lons = $_POST['lons'];
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "fire_database";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password,$dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $date = date("Y/m/d H:m:s");
+    $sql = "INSERT INTO fire_db_table (Date, Latitude, Longitude)
+    VALUES ( '" . $date . "', $lats, $lons)";
+    if ($conn->query($sql) === TRUE) {
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    $conn->close();
+    }
     ?>
   </div>
 <div id="Map" style="height:1000px"></div>
 <script src="OpenLayers.js"></script>
 <script>
-    var lat            = 27.663093;
-    var lon            = 85.3017195;
+    //var lat            = 27.663093;
+    var lat            = '<?php echo $lats;?>';
+    var lon            = <?php echo $lons;?>;
     var zoom           = 18;
 
     var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
